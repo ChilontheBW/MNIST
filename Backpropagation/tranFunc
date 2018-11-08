@@ -1,0 +1,2 @@
+function a=tranFunc(weight, bias, input)
+    a = (weight * input) + bias;
