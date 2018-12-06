@@ -1,11 +1,12 @@
-function y=CNN()
-    imgTrainPath = fullfile('E:\Users\chilo\Documents\MATLAB\','train.csv');
-    imgTestPath = fullfile('E:\Users\chilo\Documents\MATLAB\','test.csv');
+function y=cnn()
+    path = 'E:\Users\chilo\Documents\MATLAB\';
+    imgTrainPath = fullfile(path,'train.csv');
+    imgTestPath = fullfile(path,'test.csv');
     imgTrain = csvread(imgTrainPath, 1, 2); % offset row by 1 for headers, and offset cols by 2 for ID and label
     imgValidation = csvread(imgTrainPath, 1, 0, [1, 0, 60000, 1]);
     test_images = csvread(imgTestPath, 1, 1);
     test_labels = csvread(imgTestPath, 1, 0, [1,0,10000,0]);    
-    imgValidation(:,2)
+    size(imgValidation(:,2))
     
     size(imgTrain)
     
@@ -43,11 +44,13 @@ function y=CNN()
     
     net = trainNetwork(imgTrain,imgValidation(:,2),layers,options);
     
-    YPred = classify(net,imgValidation);
+    results = classify(net,imgValidation);
 
-    accuracy = sum(YPred == YValidation)/numel(YValidation)
-    out = [imgValidation(:,1),]
-    outputM = ['Id','label';out]
+    accuracy = sum(results == imgValidation)/numel(imgValidation);
+    out = [imgValidation(:,1),YPred];
+    outputM = ['Id','label';out];
         
+    csvwrite(fullfile(path,'output.csv',outputM));
+    
     y= accuracy;
 end
